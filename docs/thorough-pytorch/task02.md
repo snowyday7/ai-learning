@@ -1,0 +1,372 @@
+# Task02 PyTorch基础知识
+
+## 1 张量tensor
+
+### 1.1 概念
+
+- 概念：一个数据容器，可以包含数据、字符串等
+- 分类：0维张量（标量）、1维张量（向量）、2维张量（矩阵）、3维张量（时间序列）、4维张量（图像）、5维张量（视频）
+
+### 1.2 创建tensor
+
+
+```python
+import torch
+# 创建tensor
+x = torch.rand(4, 3)
+print(x)
+# 构造数据类型为long，数据是0的矩阵
+x = torch.zeros(4, 3, dtype=torch.long)
+print(x)
+```
+
+    tensor([[0.0479, 0.8201, 0.5482],
+            [0.4645, 0.2504, 0.5394],
+            [0.8791, 0.0699, 0.1394],
+            [0.0695, 0.9159, 0.1081]])
+    tensor([[0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0]])
+
+
+- 常见的构造Tensor的方法：
+
+|                  函数 | 功能                                                |
+| --------------------: | --------------------------------------------------- |
+|      Tensor(sizes) | 基础构造函数                                        |
+|        tensor(data) | 类似于np.array                                      |
+|        ones(sizes) | 全1                                                 |
+|       zeros(sizes) | 全0                                                 |
+|         eye(sizes) | 对角为1，其余为0                                    |
+|    arange(s,e,step) | 从s到e，步长为step                                  |
+| linspace(s,e,steps) | 从s到e，均匀分成step份                              |
+|  rand/randn(sizes) | rand是[0,1)均匀分布；randn是服从N(0，1)的正态分布 |
+|    normal(mean,std) | 正态分布(均值为mean，标准差是std)                 |
+|         randperm(m) | 随机排列                                            |
+
+### 1.2.3 操作
+
+加法、索引、维度变换、取值等
+
+- 加法
+
+
+```python
+import torch
+# 方式1
+y = torch.rand(4, 3) 
+print(x + y)
+
+# 方式2
+print(torch.add(x, y))
+
+# 方式3 in-place，原值修改
+y.add_(x) 
+print(y)
+```
+
+    tensor([[0.1874, 0.1504, 0.2045],
+            [0.4453, 0.9457, 0.4930],
+            [0.2341, 0.2106, 0.7255],
+            [0.3411, 0.8462, 0.7029]])
+    tensor([[0.1874, 0.1504, 0.2045],
+            [0.4453, 0.9457, 0.4930],
+            [0.2341, 0.2106, 0.7255],
+            [0.3411, 0.8462, 0.7029]])
+    tensor([[0.1874, 0.1504, 0.2045],
+            [0.4453, 0.9457, 0.4930],
+            [0.2341, 0.2106, 0.7255],
+            [0.3411, 0.8462, 0.7029]])
+
+
+- 索引
+
+
+使用索引表示的变量与原数据共享内存，可使用copy()等方法改变
+
+
+```python
+import torch
+x = torch.rand(4,3)
+# 取第二列
+print(x[:, 1]) 
+```
+
+    tensor([0.2408, 0.9194, 0.8660, 0.6691])
+
+
+- 维度变换
+
+张量的维度变换常见的方法有torch.view()和torch.reshape()。torch.view()会改变原始张量的维度，而torch.reshape()会返回一个新张量，但是此函数并不能保证返回的是其拷贝值。推荐的方法是我们先用 clone() 创造一个张量副本然后再使用 torch.view()进行函数维度变换。
+
+
+```python
+# 使用view改变张量的大小
+x = torch.randn(5, 4)
+y = x.view(20)
+z = x.view(-1, 5) # -1是指这一维的维数由其他维度决定
+print(x.size(), y.size(), z.size())
+```
+
+    torch.Size([5, 4]) torch.Size([20]) torch.Size([4, 5])
+
+
+- 取值
+
+如果我们有一个元素 tensor ，我们可以使用 .item() 来获得这个 value
+
+
+```python
+import torch
+x = torch.randn(1) 
+print(type(x)) 
+print(type(x.item()))
+```
+
+    <class 'torch.Tensor'>
+    <class 'float'>
+
+
+### 1.2.4 广播机制
+
+
+```python
+# 广播机制
+x = torch.arange(1, 3).view(1, 2)
+y = torch.arange(1, 4).view(3, 1)
+print("x =", x)
+print("y =", y)
+print("x + y =", x + y)
+```
+
+    x = tensor([[1, 2]])
+    y = tensor([[1],
+            [2],
+            [3]])
+    x + y = tensor([[2, 3],
+            [3, 4],
+            [4, 5]])
+
+
+## 2 自动求导
+
+- `autograd`包：为张量上的操作提供自动求导机制
+- torch.Tensor类：如果设置`.requires_grad`为`True`，那么将会追踪张量的所有操作。当完成计算后，可以通过调用`.backward()`自动计算所有的梯度。张量的所有梯度将会自动累加到`.grad`属性。为了防止跟踪历史记录(和使用内存），可以将代码块包装在 with torch.no_grad(): 中
+- `Function`：`Tensor`和`Function`互相连接生成了一个无环图 (acyclic graph)，它编码了完整的计算历史。每个张量都有一个`.grad_fn`属性，该属性引用了创建`Tensor`自身的`Function`
+
+
+```python
+import torch
+x = torch.ones(2, 2, requires_grad=True)
+print(x)
+```
+
+    tensor([[1., 1.],
+            [1., 1.]], requires_grad=True)
+
+
+
+```python
+y = x ** 2
+print(y)
+```
+
+    tensor([[1., 1.],
+            [1., 1.]], grad_fn=<PowBackward0>)
+
+
+
+```python
+z = y * y * 3
+out = z.mean()
+print("z = ", z)
+print("z mean = ", out)
+```
+
+    z =  tensor([[3., 3.],
+            [3., 3.]], grad_fn=<MulBackward0>)
+    z mean =  tensor(3., grad_fn=<MeanBackward0>)
+
+
+- 梯度：对于那么 $\vec{y}$ 关于 $\vec{x}$ 的梯度就是一个雅可比矩阵
+$$
+J=\left(
+\begin{array}{ccc}
+\frac{\partial y_{1}}{\partial x_{1}} & \cdots & \frac{\partial y_{1}}{\partial x_{n}} \\ 
+\vdots & \ddots & \vdots \\ 
+\frac{\partial y_{m}}{\partial x_{1}} & \cdots & \frac{\partial y_{m}}{\partial x_{n}}
+\end{array}\right)
+$$
+
+- `grad`的反向传播：运行反向传播，梯度都会累加之前的梯度，所以一般在反向传播之前需把梯度清零
+
+
+```python
+out.backward()
+print(x.grad)
+```
+
+    tensor([[3., 3.],
+            [3., 3.]])
+
+
+
+```python
+# 反向传播累加
+out2 = x.sum()
+out2.backward()
+print(x.grad)
+```
+
+    tensor([[4., 4.],
+            [4., 4.]])
+
+
+
+```python
+# 梯度清零
+out3 = x.sum()
+x.grad.data.zero_()
+out3.backward()
+print(x.grad)
+```
+
+    tensor([[1., 1.],
+            [1., 1.]])
+
+
+
+```python
+x = torch.randn(3, requires_grad=True)
+print(x)
+print(x.requires_grad)
+print((x ** 2).requires_grad)
+
+with torch.no_grad():
+    print((x ** 2).requires_grad)
+```
+
+    tensor([-1.1591, -0.6704,  1.0540], requires_grad=True)
+    True
+    True
+    False
+
+
+## 3 并行计算
+
+- 目的：通过使用多个GPU参与训练，加快训练速度，提高模型学习的效果
+- CUDA：是NVIDIA提供的一种GPU并行计算框架，采用`.cuda()`方法是让模型或者数据迁移到GPU中进行计算
+
+- 注意：
+    1. 数据在GPU和CPU之间进行传递时会比较耗时，尽量避免数据的切换。
+    2. GPU运算很快，但是在使用简单的操作时，我们应该尽量使用CPU去完成。
+    3. tensor.cuda()方法会默认将tensor保存到第一块GPU上，等价于tensor.cuda(0)，这将有可能导致爆出out of memory的错误：
+
+
+```python
+#设置在文件最开始部分
+import os
+os.environ["CUDA_VISIBLE_DEVICE"] = "2" # 设置默认的显卡
+
+#或者
+CUDA_VISBLE_DEVICE=0,1  # 使用0，1两块GPU
+```
+
+- 并行计算方法：
+  1. Network partitioning：将一个模型网络的各部分拆分，分配到不同的GPU中,执行不同的计算任务
+  2. Layer-wise partitioning：将同一层模型拆分，分配到不同的GPU中，训练同一层模型的部分任务
+  3. Data parallelism（主流）：将不同的数据分配到不同的GPU中，执行相同的任务
+
+## 4 使用CUDA加速训练
+
+### 4.1 单卡训练
+```python
+model = Net()
+model.cuda() # 模型显示转移到CUDA上
+
+for image,label in dataloader:
+
+    # 图像和标签显示转移到CUDA上    
+    image = image.cuda() 
+    label = label.cuda()
+```
+
+### 4.2 多卡训练
+PyTorch提供了两种多卡训练的方式，分别为DataParallel和DistributedDataParallel（以下我们分别简称为DP和DDP）。DDP性能更好，但更复杂
+
+#### 4.2.1 单机多卡DP
+主要使用数据并行nn.DataParallel函数，比较简单
+```python
+model = Net()
+model.cuda() # 模型显示转移到CUDA上
+
+if torch.cuda.device_count() > 1: # 含有多张GPU的卡
+	model = nn.DataParallel(model) # 单机多卡DP训练
+```
+
+可以指定GPU进行并行训练，一般有两种方式:
+
+```python
+#nn.DataParallel函数传入device_ids参数，可以指定了使用的GPU编号
+model = nn.DataParallel(model, device_ids=[0, 1])
+#要手动指定对程序可见的GPU设备
+os.environ["CUDA_VISIBLE_DEVICES"] = "1,2"
+```
+
+#### 4.2.2 多机多卡DDP
+
+##### 进程组的相关概念
+
+- GROUP：进程组，默认情况下，只有一个组，一个 job 即为一个组，也即一个 world。（当需要进行更加精细的通信时，可以通过 new_group 接口，使用 world 的子集，创建新组，用于集体通信等。）
+
+- WORLD_SIZE：表示全局进程个数。如果是多机多卡就表示机器数量，如果是单机多卡就表示 GPU 数量。
+
+- RANK：表示进程序号，用于进程间通讯，表征进程优先级。rank = 0 的主机为 master 节点。 如果是多机多卡就表示对应第几台机器，如果是单机多卡，由于一个进程内就只有一个 GPU，所以 rank 也就表示第几块 GPU。
+
+- LOCAL_RANK：表示进程内，GPU 编号，非显式参数，由 torch.distributed.launch 内部指定。例如，多机多卡中 rank = 3，local_rank = 0 表示第 3 个进程内的第 1 块 GPU。
+
+##### DDP的基本用法 (代码编写流程)
+
+- 在使用 distributed 包的任何其他函数之前，需要使用 init_process_group 初始化进程组，同时初始化 distributed 包。
+
+- 使用 torch.nn.parallel.DistributedDataParallel 创建 分布式模型 DDP(model, device_ids=device_ids)
+
+- 使用 torch.utils.data.distributed.DistributedSampler 创建 DataLoader
+
+- 使用启动工具 torch.distributed.launch 在每个主机上执行一次脚本，开始训练
+
+首先是对代码进行修改，添加参数 --local_rank
+
+
+
+```python
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--local_rank", type=int) # 这个参数很重要
+args = parser.parse_args()
+torch.cuda.set_device(args.local_rank) # 调整计算的位置，在所有与GPU相关代码前设置
+
+# ps 检查nccl是否可用
+# torch.distributed.is_nccl_available ()
+torch.distributed.init_process_group(backend='nccl') # 选择nccl后端，初始化进程组
+
+# 创建Dataloader
+train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=16, sampler=train_sampler)
+
+# 创建DDP模型，DDP进行训练
+model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank])
+
+```
+
+
+#启动DDP
+```python
+  CUDA_VISIBLE_DEVICES=0,1,2,3 python -m torch.distributed.launch --nproc_per_node=4 main.py
+  # nproc_per_node: 这个参数是指你使用这台服务器上面的几张显卡
+```
+
+## 5 总结
+
+&emsp;&emsp;本次任务，主要介绍了PyTorch概念及优势、以及基础知识，包括张量、自动求导和并行计算；通过构建张量，存储我们需要的数据；基于自动求导机制和雅可比矩阵的计算规则，计算张量的梯度；并行计算方法主要包括Network partitioning、Layer-wise partitioning和Data parallelism，目前主流的是最后一种。

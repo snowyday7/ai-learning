@@ -1,0 +1,144 @@
+# Task01 PyTorch的简介和安装
+
+## 1 PyTorch的简介
+
+- PyTorch是由Meta AI(Facebook)人工智能研究小组开发的一种基于Lua编写的Torch库的Python实现的深度学习库
+- 优势：更加简洁、上手快、有着良好的文档和社区支持、项目开源、可以更好的调试代码、越来越完善的扩展库
+
+## 2 PyTorch的安装
+
+### 2.1 安装Anaconda/miniconda
+
+登陆[Anaconda | Individual Edition](https://www.anaconda.com/products/individual)，选择相应系统DownLoad
+
+#### 2.1.1 创建虚拟环境
+
+##### 查看现存虚拟环境：
+
+```bash
+conda env list 
+```
+
+##### 创建虚拟环境：
+
+```bash
+conda create -n env_name python==version 
+# 注：将env_name 替换成你的环境的名称，version替换成对应的版本号，eg：3.8
+```
+
+##### 安装包：
+
+```bash
+conda install package_name 
+# 注：package_name 替换成对应的包的名称，eg: pandas
+```
+
+##### 卸载包
+
+```bash
+conda remove package_name
+# 注：package_name 替换成对应的包的名称，eg: pandas
+```
+
+##### 显示所有安装的包
+
+```bash
+conda list
+```
+
+##### 删除虚拟环境命令
+
+```bash
+conda remove -n env_name --all 
+# 注：env_name 替换成对应的环境的名称
+```
+
+##### 激活环境命令
+
+```bash
+conda activate env_name
+# 注：env_name 替换成对应的环境的名称
+```
+
+##### 退出当前环境
+
+```bash
+conda deactivate
+```
+
+
+### 2.1.2 换源
+在安装package时，我们经常会使用pip install package_name和conda install package_name 的命令，但是一些package下载速度会很慢，因此我们需要进行换源，换成国内源，加快我们的下载速度。以下便是两种对应方式的永久换源。
+
+#### pip换源（Linux）：
+
+Linux下的换源，我们首先需要在用户目录下新建文件夹 `.pip`，并且在文件夹内新建文件 `pip.conf`，具体命令如下
+
+```bash
+cd ~
+mkdir .pip/
+vi pip.conf
+```
+
+随后，我们需要在 `pip.conf`添加下方的内容:
+
+```bash
+[global]
+index-url = http://pypi.douban.com/simple
+[install]
+use-mirrors =true
+mirrors =http://pypi.douban.com/simple/
+trusted-host =pypi.douban.com
+```
+
+#### conda换源（Linux）：
+在Linux系统下，我们还是需要修改 `.condarc`来进行换源
+
+```bash
+cd ~
+vi .condarc
+```
+
+在 `vim`下，我们需要输入 `i`进入编辑模式，将上方内容粘贴进去，按 `ESC`退出编辑模式，输入 `:wq`保存并退出
+
+```bash
+channels:
+  - defaults
+show_channel_urls: true
+default_channels:
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2
+custom_channels:
+  conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  msys2: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  bioconda: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  menpo: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+  simpleitk: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+```
+
+
+### 2.2安装PyTorch
+
+登录[PyTorch官网](https://pytorch.org/)，选择合适的版本下载
+
+
+检验是否安装成功：
+
+
+```python
+import torch
+
+torch.cuda.is_available()
+
+```
+
+
+
+
+    False
+
+
+
+这条命令意思是检验是否可以调用cuda，如果我们安装的是CPU版本的话会返回False，能够调用GPU的会返回True
