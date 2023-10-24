@@ -5,3 +5,4 @@
     * [三 PyTorch的主要组成模块](thorough-pytorch/ch03)
     * [四 PyTorch基础实战](thorough-pytorch/ch04.md)
     * [五 PyTorch模型定义](thorough-pytorch/ch05.md)
+    * [六 PyTorch进阶训练技巧](thorough-pytorch/ch06.md)
