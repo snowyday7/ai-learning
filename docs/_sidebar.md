@@ -7,3 +7,5 @@
     * [五 PyTorch模型定义](thorough-pytorch/ch05.md)
     * [六 PyTorch进阶训练技巧](thorough-pytorch/ch06.md)
     * [七 PyTorch可视化](thorough-pytorch/ch07.md)
+    * [八 PyTorch生态简介](thorough-pytorch/ch08.md)
+    * [九 使用ONNX进行部署并推理](thorough-pytorch/ch09.md)
