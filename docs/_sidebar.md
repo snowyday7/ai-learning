@@ -6,3 +6,4 @@
     * [四 PyTorch基础实战](thorough-pytorch/ch04.md)
     * [五 PyTorch模型定义](thorough-pytorch/ch05.md)
     * [六 PyTorch进阶训练技巧](thorough-pytorch/ch06.md)
+    * [七 PyTorch可视化](thorough-pytorch/ch07.md)
