@@ -1,5 +1,5 @@
 * [目录](README.md)
-  * [第一期 深入浅出PyTorch/thorough-pytorch](thorough-pytorch/contents.md)
+  * [ ~ 深入浅出PyTorch/thorough-pytorch](thorough-pytorch/contents.md)
     * [一 PyTorch简介与安装](thorough-pytorch/ch01.md)
     * [二 PyTorch基础知识](thorough-pytorch/ch02.md)
     * [三 PyTorch的主要组成模块](thorough-pytorch/ch03)
