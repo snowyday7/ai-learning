@@ -49,7 +49,7 @@ if __name__ == '__main__':
     train_loader = DataLoader(dataset=train_dataset, batch_size=64, shuffle=True, num_workers=2, drop_last=True)
     test_loader = DataLoader(dataset=test_dataset, batch_size=1000, shuffle=False, num_workers=2)
 
-    model = SimpleCNN()
+    model = SimpleCNN().to(device)
 
     # 定义损失函数和优化器
     criterion = nn.CrossEntropyLoss()
