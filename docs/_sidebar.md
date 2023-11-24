@@ -1,5 +1,6 @@
 * [目录](README.md)
   * [ ~ 深入浅出PyTorch/thorough-pytorch](thorough-pytorch/contents.md)
+
     * [一 PyTorch简介与安装](thorough-pytorch/ch01.md)
     * [二 PyTorch基础知识](thorough-pytorch/ch02.md)
     * [三 PyTorch的主要组成模块](thorough-pytorch/ch03)
@@ -10,6 +11,7 @@
     * [八 PyTorch生态简介](thorough-pytorch/ch08.md)
     * [九 使用ONNX进行部署并推理](thorough-pytorch/ch09.md)
   * [~ 机器学习实战/machine-learning-toy-code](machine-learning-toy-code/contents.md)
+
     * [一 LinearRegression 线性回归](machine-learning-toy-code/ch01-LinearRegression.md)
     * [二 LogistRegression 逻辑回归](machine-learning-toy-code/ch02-LogistRegression.md)
     * [三 DecisionTree 决策树](machine-learning-toy-code/ch03-DecisionTree.md)
@@ -22,3 +24,8 @@
     * [十 kNN k最近邻](machine-learning-toy-code/ch10-kNN.md)
     * [十一 PCA 主成分分析](machine-learning-toy-code/ch11-PCA.md)
     * [十二 HMM 隐马尔可夫模型](machine-learning-toy-code/ch12-HMM.md)
+  * [~ 水很深的深度学习/unusual-deep-learning](unusual-deep-learning/contents.md)
+
+    * [一 绪论与深度学习概述](unusual-deep-learning/ch01-绪论与深度学习概述)
+    * [二 数学基础](unusual-deep-learning/ch02-数学基础.md)
+    * [三 机器学习基础](unusual-deep-learning/ch03-机器学习基础.md)
