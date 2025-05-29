@@ -57,3 +57,8 @@
     * [十三 概率图模型](hands-on-ML/ch13-概率图模型.md)
     * [十四 EM算法](hands-on-ML/ch14-EM算法.md)
     * [十五 自动编码器](hands-on-ML/ch15-自动编码器.md)
+  * [~ Python Learning](python-learning/contents.md)
+
+    * [一 Python](python-learning/python_learning_examples.md)
+    * [二 Numpy](python-learning/numpy_advanced_examples.md)
+    * [三 Pandas](python-learning/pandas_advanced_examples.md)
